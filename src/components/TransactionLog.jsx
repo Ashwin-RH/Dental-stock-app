@@ -33,15 +33,21 @@ export default function TransactionLog({ logs }) {
                 {/* Type badge */}
                 <td className="py-2 px-3 border border-gray-700/20">
                   <span
-                    className={`px-2 py-0.5 rounded-lg text-xs font-semibold tracking-wide
-                      ${
-                        l.type === "IN"
-                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-400"
-                          : "bg-red-500/20 text-red-400 border border-red-400"
-                      }`}
-                  >
-                    {l.type === "IN" ? "⬇ IN" : "⬆ OUT"}
-                  </span>
+  className={`
+    px-2 py-0.5 sm:px-2 sm:py-0.5 rounded-lg 
+    text-[10px] sm:text-xs font-semibold tracking-wide
+    whitespace-nowrap
+    ${
+      l.type === "IN"
+        ? "bg-emerald-500/20 text-emerald-400 border border-emerald-400"
+        : "bg-red-500/20 text-red-400 border border-red-400"
+    }
+  `}
+>
+  <span className="sm:hidden">{l.type === "IN" ? "⬇" : "⬆"}</span>
+  <span className="hidden sm:inline">{l.type === "IN" ? "⬇ IN" : "⬆ OUT"}</span>
+</span>
+
                 </td>
 
                 <td className="py-2 px-3 border border-gray-700/20 text-gray-200">{l.brand}</td>
