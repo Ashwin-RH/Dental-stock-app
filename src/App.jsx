@@ -4,9 +4,9 @@ import Home from "./pages/Home";
 export default function App() {
   return (
     <div>
-      <AppLock>
+      {/* <AppLock> */}
       <Home />
-      </AppLock>
+      {/* </AppLock> */}
     </div>
   );
 }
