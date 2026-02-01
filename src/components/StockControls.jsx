@@ -119,12 +119,16 @@ export default function StockControls({
   <option className="bg-white text-black">A1</option>
   <option className="bg-white text-black">A2</option>
   <option className="bg-white text-black">A3</option>
+  <option className="bg-white text-black">A3.5</option>
   <option className="bg-white text-black">B1</option>
   <option className="bg-white text-black">B2</option>
   <option className="bg-white text-black">B3</option>
   <option className="bg-white text-black">C1</option>
   <option className="bg-white text-black">C2</option>
   <option className="bg-white text-black">C3</option>
+  <option className="bg-white text-black">D2</option>
+  <option className="bg-white text-black">D3</option>
+  <option className="bg-white text-black">D4</option>
 </select>
 
 
