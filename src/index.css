@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap');
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  font-family: "Zalando Sans Expanded", sans-serif;
+  font-weight: 400;
+  background-color: #f5f6fa;
+}
+
+.font-bitcount {
+  font-family: "Bitcount Single", monospace;
+}
+
+.font-zalando {
+  font-family: "Zalando Sans Expanded", sans-serif;
+}
+
+.font-saira {
+  font-family: "Saira", sans-serif;
+}
+
+.alert-box {
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+
+@media print {
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only StockTable and TransactionLog */
+  #print-area,
+  #print-area *,
+  .transaction-log,
+  .transaction-log * {
+    visibility: visible;
+  }
+
+  /* Position print content nicely */
+  #print-area,
+  .transaction-log {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    background: white;
+    color: black;
+  }
+
+  /* Prevent page breaks inside table rows */
+  table {
+    page-break-inside: auto;
+    border-collapse: collapse;
+  }
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  thead {
+    display: table-header-group;
+  }
+}
