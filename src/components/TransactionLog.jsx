@@ -18,6 +18,7 @@ export default function TransactionLog({ logs, deleteTransaction }) {
               <th className="py-2 px-3 text-left border border-gray-700/50">Shade</th>
               <th className="py-2 px-3 text-left border border-gray-700/50">Size</th>
               <th className="py-2 px-3 text-left border border-gray-700/50">Qty</th>
+              <th className="py-2 px-3 text-left border border-gray-700/50">Lab / Clinic</th>
               <th className="py-2 px-3 text-left border border-gray-700/50">Time</th>
             </tr>
           </thead>
@@ -69,6 +70,12 @@ export default function TransactionLog({ logs, deleteTransaction }) {
                   {l.type === "IN" ? "+" : "-"}
                   {l.qty}
                 </td>
+
+                <td className="py-2 px-3 border border-gray-700/20 text-gray-200">
+                  {l.clinic || "-"}
+                </td>
+
+
 
                 {/* Time + Delete */}
 <td className="py-2 px-3 border border-gray-700/20 text-xs text-gray-400">

@@ -82,11 +82,11 @@ export default function Home() {
   const exportLogsAsCSV = () => {
     if (logs.length === 0) return alert("No transactions to export");
 
-    const header = ["Type", "Brand", "Shade", "Qty", "Size", "Time"];
+    const header = ["Type", "Brand", "Shade", "Size", "Qty", "Lab / Clinic", "Time"];
     const csvRows = [header.join(",")];
 
     filteredLogs.forEach(l => {
-      const row = [l.type, l.brand, l.shade, l.qty, l.size, l.time];
+      const row = [l.type, l.brand, l.shade, l.size, l.qty, l.clinic || "-", l.time];
       csvRows.push(row.join(","));
     });
 

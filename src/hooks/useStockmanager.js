@@ -251,7 +251,7 @@ const addInward = ({ brand, size, shade, quantity }) => {
 
   /* ---------- OUTWARD ---------- */
 
-  const addOutward = ({ brand, size, shade, quantity }) => {
+  const addOutward = ({ brand, size, shade, clinic, quantity }) => {
   const qty = Number(quantity);
 
   setStock(prev =>
@@ -282,7 +282,7 @@ const addInward = ({ brand, size, shade, quantity }) => {
   );
 
   setLogs(l => [
-    { type: "OUT", brand, size, shade: shade || "-", qty, time: new Date().toLocaleString() },
+    { type: "OUT", brand, size, shade: shade || "-", qty, clinic: clinic || "-", time: new Date().toLocaleString() },
     ...l
   ].slice(0, 500));
 

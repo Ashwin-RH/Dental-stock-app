@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const BRANDS = ["Aizir", "SHTC", "SHTW"];
 const SHADES = ["A1", "A2", "A3", "A3.5", "B1", "B2", "B3", "C1", "C2", "C3","D2","D3","D4"];
@@ -27,12 +28,12 @@ export default function OutwardModal({ onClose, onSubmit, stock }) {
         ?.stock?.[form.size]?.[form.shade] ?? 0;
 
     if (!form.quantity || form.quantity <= 0) {
-      alert("Enter a valid quantity");
+      toast.error("Enter a valid quantity");
       return;
     }
 
     if (Number(form.quantity) > availableQty) {
-      alert(`Not enough stock. Available: ${availableQty}`);
+      toast.error(`Not enough stock. Available: ${availableQty}`);
       return;
     }
 
@@ -106,7 +107,7 @@ export default function OutwardModal({ onClose, onSubmit, stock }) {
         {/* Clinic */}
         <input
           name="clinic"
-          placeholder="Clinic / Lab Name"
+          placeholder="Lab Name"
           value={form.clinic}
           onChange={handleChange}
           className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-3 focus:outline-none"
@@ -121,7 +122,7 @@ export default function OutwardModal({ onClose, onSubmit, stock }) {
           onChange={handleChange}
           className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-1 focus:outline-none"
         />
-        <p className="text-xs text-gray-300 mb-2">
+        <p className="text-sm border border-gray-700/70 shadow-xl shadow-blue-600/10 rounded-lg mx-15 text-center text-orange-300 mb-2">
           Available: {stock.find(b => b.brand === form.brand)?.stock?.[form.size]?.[form.shade] ?? 0}
         </p>
 

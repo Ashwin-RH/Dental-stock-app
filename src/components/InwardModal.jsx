@@ -30,7 +30,6 @@ export default function InwardModal({ onClose, onSubmit }) {
   onSubmit(form);
 
   toast.success("Saved successfully");
-  onClose();
 };
 
   useEffect(() => {
@@ -102,22 +101,22 @@ export default function InwardModal({ onClose, onSubmit }) {
         </select>
 
         {/* Supplier */}
-        <input
+        {/* <input
           name="supplier"
           placeholder="Supplier Name"
           value={form.supplier}
           onChange={handleChange}
           className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-3 focus:outline-none"
-        />
+        /> */}
 
         {/* Batch */}
-        <input
+        {/* <input
           name="batch"
           placeholder="Batch Number"
           value={form.batch}
           onChange={handleChange}
           className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-3 focus:outline-none"
-        />
+        /> */}
 
         {/* Quantity */}
         <input
