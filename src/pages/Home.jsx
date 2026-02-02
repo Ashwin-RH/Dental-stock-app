@@ -33,16 +33,7 @@ export default function Home() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-    // ✅ Remove "Superfect" brand on load
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("sam-stock-recorder-v1"));
-    if (data?.stock?.some(b => b.brand === "Superfect")) {
-      const updatedStock = data.stock.filter(b => b.brand !== "Superfect");
-      const newData = { ...data, stock: updatedStock };
-      localStorage.setItem("sam-stock-recorder-v1", JSON.stringify(newData));
-      refreshStock(newData); // update UI immediately
-    }
-  }, []);
+
 
 
 

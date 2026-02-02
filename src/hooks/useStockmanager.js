@@ -77,16 +77,36 @@ useEffect(() => {
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      setStock(parsed.stock || initialStock);
+
+      // 🔥 REMOVE Superfect HERE (ONCE)
+      const cleanedStock = (parsed.stock || initialStock)
+        .filter(b => b.brand !== "Superfect");
+
+      const cleanedData = {
+        ...parsed,
+        stock: cleanedStock
+      };
+
+      // 🔥 WRITE CLEAN DATA BACK
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(cleanedData, null, 2)
+      );
+
+      // 🔥 HYDRATE STATE WITH CLEAN DATA
+      setStock(cleanedStock);
       setLogs(parsed.logs || []);
       setLastUpdated(parsed.lastUpdated || null);
+
     } catch (e) {
-      console.error("Failed to load saved stock data");
+      console.error("Failed to load saved stock data", e);
+      setStock(initialStock);
     }
   }
 
-  setHydrated(true); // ✅ IMPORTANT
+  setHydrated(true);
 }, []);
+
 
 
 useEffect(() => {
