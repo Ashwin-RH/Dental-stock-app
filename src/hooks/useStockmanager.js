@@ -44,6 +44,7 @@ export function useStockManager() {
   const [logs, setLogs] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
 
+
    const getMonthKey = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
@@ -55,6 +56,20 @@ const getSnapshots = () => {
     .sort()
     .reverse();
 };
+
+ // ✅ Refresh stock state function
+  const refreshStock = (data) => {
+    if (data) {
+      setStock(data.stock || initialStock);
+      setLogs(data.logs || []);
+      setLastUpdated(data.lastUpdated || null);
+    } else {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      setStock(saved?.stock || initialStock);
+      setLogs(saved?.logs || []);
+      setLastUpdated(saved?.lastUpdated || null);
+    }
+  };
 
 useEffect(() => {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -293,6 +308,7 @@ const addInward = ({ brand, size, shade, quantity }) => {
     addInward,
     addOutward,
     undoLastTransaction,
-    getSnapshots
+    getSnapshots,
+    refreshStock
   };
 }
