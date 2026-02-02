@@ -32,6 +32,19 @@ export default function Home() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
+  // ---------------- REMOVE OLD "Superfect" BRAND ----------------
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("sam-stock-recorder-v1"));
+    if (data?.stock?.some(b => b.brand === "Superfect")) {
+      const updatedStock = data.stock.filter(b => b.brand !== "Superfect");
+      localStorage.setItem(
+        "sam-stock-recorder-v1",
+        JSON.stringify({ ...data, stock: updatedStock })
+      );
+      // OPTIONAL: you can call a state update or your hook refresh function here if needed
+    }
+  }, []);
+
 
 
   /* ---------- FILTERED STOCK ---------- */
