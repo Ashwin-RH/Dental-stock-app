@@ -22,7 +22,8 @@ export default function Home() {
     addOutward,
     undoLastTransaction,
     getSnapshots,
-    refreshStock
+    refreshStock,
+    deleteTransaction
   } = useStockManager();
 
   const [showInward, setShowInward] = useState(false);
@@ -184,7 +185,7 @@ export default function Home() {
   )}
 
   {/* Transaction Logs */}
-  <TransactionLog className="transaction-log" logs={filteredLogs} />
+  <TransactionLog className="transaction-log" logs={filteredLogs} deleteTransaction={deleteTransaction} />
 </div>
 
 

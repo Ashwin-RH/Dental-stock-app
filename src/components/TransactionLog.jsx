@@ -1,4 +1,7 @@
-export default function TransactionLog({ logs }) {
+import { Trash2 } from "lucide-react";
+
+
+export default function TransactionLog({ logs, deleteTransaction }) {
   return (
     <div id="logsTable" className="mt-6">
       <h3 className="text-lg text-gray-200 font-semibold mb-2 tracking-wide">
@@ -67,10 +70,27 @@ export default function TransactionLog({ logs }) {
                   {l.qty}
                 </td>
 
-                {/* Time */}
-                <td className="py-2 px-3 text-center text-gray-400 border border-gray-700/20 text-xs whitespace-nowrap">
-                  {l.time}
-                </td>
+                {/* Time + Delete */}
+<td className="py-2 px-3 border border-gray-700/20 text-xs text-gray-400">
+  <div className="flex items-center justify-between gap-2">
+    {/* Time */}
+    <span className="whitespace-nowrap">{l.time}</span>
+
+    {/* Delete button */}
+    <button
+      onClick={() => deleteTransaction(logs.length - 1 - i)}
+      className="p-1 rounded hover:bg-red-600/40 text-red-500 hover:text-red-200 transition-colors cursor-pointer"
+      title="Delete transaction"
+    >
+      <Trash2 className="w-4 h-4  cursor-pointer" />
+    </button>
+  </div>
+</td>
+
+
+
+                
+
               </tr>
             ))}
 

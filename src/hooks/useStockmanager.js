@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
-const SHADES = ["A1","A2","A3","B1","B2","B3","C1","C2","C3"];
+const SHADES = ["A1","A2","A3","A3.5","B1","B2","B3","C1","C2","C3"];
 const SIZES = ["8mm","10mm","12mm","14mm","16mm","18mm","20mm"];
 const SHTW_SIZES = ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"];
 
 
 const STORAGE_KEY = "sam-stock-recorder-v1";
+
 
 
 const emptySize = () =>
@@ -44,7 +46,8 @@ export function useStockManager() {
   const [logs, setLogs] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
 
-
+  
+  
    const getMonthKey = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
@@ -230,7 +233,7 @@ const addInward = ({ brand, size, shade, quantity }) => {
           ...b.stock,
           [size]: {
             ...b.stock[size],
-            [shade]: b.stock[size][shade] + qty
+            [shade]: (b.stock[size][shade] || 0) + qty
           }
         }
       };
@@ -271,7 +274,7 @@ const addInward = ({ brand, size, shade, quantity }) => {
           ...b.stock,
           [size]: {
             ...b.stock[size],
-            [shade]: Math.max(0, b.stock[size][shade] - qty)
+            [shade]: Math.max(0, (b.stock[size][shade] || 0) - qty)
           }
         }
       };
@@ -285,6 +288,60 @@ const addInward = ({ brand, size, shade, quantity }) => {
 
   updateTime();
 };
+
+/* ---------- DELETE TRANSACTION ---------- */
+const deleteTransaction = (index) => {
+  const txn = logs[index];
+  if (!txn) return;
+
+  setStock(prev =>
+    prev.map(b => {
+      if (b.brand !== txn.brand) return b;
+
+      // 🔹 SHTW (SIZE_ONLY)
+      if (b.type === "SIZE_ONLY") {
+        const current = b.stock[txn.size] || 0;
+        const reverted = txn.type === "IN"
+          ? Math.max(0, current - txn.qty)
+          : current + txn.qty;
+
+        return {
+          ...b,
+          stock: {
+            ...b.stock,
+            [txn.size]: reverted
+          }
+        };
+      }
+
+      // 🔹 Normal brands
+      const current = b.stock[txn.size][txn.shade] || 0;
+      const reverted = txn.type === "IN"
+        ? Math.max(0, current - txn.qty)
+        : current + txn.qty;
+
+      return {
+        ...b,
+        stock: {
+          ...b.stock,
+          [txn.size]: {
+            ...b.stock[txn.size],
+            [txn.shade]: reverted
+          }
+        }
+      };
+    })
+  );
+
+  // Remove the log
+  setLogs(prev => prev.filter((_, i) => i !== index));
+  updateTime();
+
+  //show toast
+   toast.success(`Transaction deleted: ${txn.type} ${txn.qty} ${txn.brand} ${txn.size}${txn.shade !== "-" ? `-${txn.shade}` : ""}`);
+};
+
+
 
    /* ---------- UNDO ---------- */
 
@@ -329,6 +386,7 @@ const addInward = ({ brand, size, shade, quantity }) => {
     addInward,
     addOutward,
     undoLastTransaction,
+    deleteTransaction,
     getSnapshots,
     refreshStock
   };
