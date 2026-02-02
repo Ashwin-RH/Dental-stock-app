@@ -106,7 +106,8 @@ export default function StockControls({
 >
   <option className="bg-white text-black" value="ALL">All Brands</option>
   <option className="bg-white text-black" value="Aizir">Aizir</option>
-  <option className="bg-white text-black" value="Superfect">Superfect</option>
+  <option className="bg-white text-black" value="SHTC">SHTC</option>
+  <option className="bg-white text-black" value="SHTW">SHTW</option>
 </select>
 
 

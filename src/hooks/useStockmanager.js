@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 const SHADES = ["A1","A2","A3","B1","B2","B3","C1","C2","C3"];
 const SIZES = ["8mm","10mm","12mm","14mm","16mm","18mm","20mm"];
+const SHTW_SIZES = ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"];
+
 
 const STORAGE_KEY = "sam-stock-recorder-v1";
 
@@ -12,6 +14,10 @@ const emptySize = () =>
 const emptyStock = () =>
   Object.fromEntries(SIZES.map(sz => [sz, emptySize()]));
 
+const emptySizeOnlyStock = () =>
+  Object.fromEntries(SHTW_SIZES.map(sz => [sz, 0]));
+
+
 const initialStock = [
   {
     brand: "Aizir",
@@ -19,10 +25,17 @@ const initialStock = [
     minStock: emptyStock()
   },
   {
-    brand: "Superfect",
+    brand: "SHTC",
     stock: emptyStock(),
     minStock: emptyStock()
-  }
+  },
+  {
+  brand: "SHTW",
+  type: "SIZE_ONLY",
+  stock: emptySizeOnlyStock(),
+  minStock: emptySizeOnlyStock()
+}
+
 ];
 
 export function useStockManager() {
@@ -103,9 +116,13 @@ useEffect(() => {
 
   /* ---------- HELPERS ---------- */
 
-  const totalByBrand = (brand) => {
+const totalByBrand = (brand) => {
   const brandObj = stock.find(b => b.brand === brand);
   if (!brandObj) return 0;
+
+  if (brandObj.type === "SIZE_ONLY") {
+    return Object.values(brandObj.stock).reduce((a, b) => a + b, 0);
+  }
 
   return Object.values(brandObj.stock).reduce(
     (sum, sizeObj) =>
@@ -115,101 +132,123 @@ useEffect(() => {
 };
 
 
-  const totalStock = stock.reduce(
-    (sum, b) =>
-      sum +
-      Object.values(b.stock).reduce(
-        (s, sizeObj) =>
-          s + Object.values(sizeObj).reduce((a, b) => a + b, 0),
-        0
-      ),
-    0
-  );
 
-  const lowStockCount = stock.reduce((count, b) => {
-    Object.entries(b.stock).forEach(([size, shades]) => {
-      Object.entries(shades).forEach(([shade, qty]) => {
-        if (qty <= b.minStock[size][shade]) count++;
-      });
+const totalStock = stock.reduce((sum, b) => {
+  if (b.type === "SIZE_ONLY") {
+    return sum + Object.values(b.stock).reduce((a, c) => a + c, 0);
+  }
+
+  return (
+    sum +
+    Object.values(b.stock).reduce(
+      (s, sizeObj) =>
+        s + Object.values(sizeObj).reduce((a, b) => a + b, 0),
+      0
+    )
+  );
+}, 0);
+
+
+const lowStockCount = stock.reduce((count, b) => {
+  if (b.type === "SIZE_ONLY") {
+    Object.entries(b.stock).forEach(([size, qty]) => {
+      if (qty <= b.minStock[size]) count++;
     });
     return count;
-  }, 0);
+  }
+
+  Object.entries(b.stock).forEach(([size, shades]) => {
+    Object.entries(shades).forEach(([shade, qty]) => {
+      if (qty <= b.minStock[size][shade]) count++;
+    });
+  });
+
+  return count;
+}, 0);
+
 
   /* ---------- INWARD ---------- */
 
-  const addInward = ({ brand, size, shade, quantity }) => {
-    const qty = Number(quantity);
+const addInward = ({ brand, size, shade, quantity }) => {
+  const qty = Number(quantity);
 
-    setStock(prev =>
-      prev.map(b =>
-        b.brand !== brand
-          ? b
-          : {
-              ...b,
-              stock: {
-                ...b.stock,
-                [size]: {
-                  ...b.stock[size],
-                  [shade]: b.stock[size][shade] + qty
-                }
-              }
-            }
-      )
-    );
+  setStock(prev =>
+    prev.map(b => {
+      if (b.brand !== brand) return b;
 
-    setLogs(l => [
-  {
-    type: "IN",
-    brand,
-    size,
-    shade,
-    qty,
-    time: new Date().toLocaleString()
-  },
-  ...l
-].slice(0, 500)); // keep only last 500 logs
+      // 🔹 SHTW
+      if (b.type === "SIZE_ONLY") {
+        return {
+          ...b,
+          stock: {
+            ...b.stock,
+            [size]: b.stock[size] + qty
+          }
+        };
+      }
 
+      // 🔹 Normal brands
+      return {
+        ...b,
+        stock: {
+          ...b.stock,
+          [size]: {
+            ...b.stock[size],
+            [shade]: b.stock[size][shade] + qty
+          }
+        }
+      };
+    })
+  );
 
-    updateTime();
-  };
+  setLogs(l => [
+    { type: "IN", brand, size, shade: shade || "-", qty, time: new Date().toLocaleString() },
+    ...l
+  ].slice(0, 500));
+
+  updateTime();
+};
+
 
   /* ---------- OUTWARD ---------- */
 
   const addOutward = ({ brand, size, shade, quantity }) => {
-    const qty = Number(quantity);
+  const qty = Number(quantity);
 
-    setStock(prev =>
-      prev.map(b =>
-        b.brand !== brand
-          ? b
-          : {
-              ...b,
-              stock: {
-                ...b.stock,
-                [size]: {
-                  ...b.stock[size],
-                  [shade]: Math.max(0, b.stock[size][shade] - qty)
-                }
-              }
-            }
-      )
-    );
+  setStock(prev =>
+    prev.map(b => {
+      if (b.brand !== brand) return b;
 
-    setLogs(l => [
-  {
-    type: "OUT",
-    brand,
-    size,
-    shade,
-    qty,
-    time: new Date().toLocaleString()
-  },
-  ...l
-].slice(0, 500));
+      if (b.type === "SIZE_ONLY") {
+        return {
+          ...b,
+          stock: {
+            ...b.stock,
+            [size]: Math.max(0, b.stock[size] - qty)
+          }
+        };
+      }
 
+      return {
+        ...b,
+        stock: {
+          ...b.stock,
+          [size]: {
+            ...b.stock[size],
+            [shade]: Math.max(0, b.stock[size][shade] - qty)
+          }
+        }
+      };
+    })
+  );
 
-    updateTime();
-  };
+  setLogs(l => [
+    { type: "OUT", brand, size, shade: shade || "-", qty, time: new Date().toLocaleString() },
+    ...l
+  ].slice(0, 500));
+
+  updateTime();
+};
 
    /* ---------- UNDO ---------- */
 

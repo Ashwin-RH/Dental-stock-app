@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const BRANDS = ["Aizir", "Superfect"];
+const BRANDS = ["Aizir", "SHTC", "SHTW"];
 const SHADES = ["A1", "A2", "A3", "A3.5", "B1", "B2", "B3", "C1", "C2", "C3","D2","D3","D4"];
 const SIZES = ["10mm", "12mm", "14mm", "16mm", "18mm", "20mm","22mm","25mm"];
 
@@ -26,6 +26,7 @@ export default function InwardModal({ onClose, onSubmit }) {
       return;
     }
     onSubmit(form);
+    onClose();
   };
 
   useEffect(() => {

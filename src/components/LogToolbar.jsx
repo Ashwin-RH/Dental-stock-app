@@ -41,7 +41,7 @@ export default function LogToolbar({
             type="date"
             value={fromDate}
             onChange={(e) => setFromDate(e.target.value)}
-            className="bg-gray-900/60 border border-blue-500/20 rounded-xl px-4 py-2
+            className="bg-gray-900/60 placeholder:text-gray-400 border border-blue-500/20 rounded-xl px-4 py-2
               text-blue-100 outline-none transition-all duration-300
               focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 w-full sm:w-auto"
             style={{ colorScheme: "dark" }}

@@ -38,6 +38,7 @@ export default function StockSummary({ stock, totalByBrand, totalStock }) {
           transition-transform duration-300
           hover:scale-[1.01]
           hover:shadow-2xl hover:shadow-blue-600/30
+          col-span-1 sm:col-span-3
         "
       >
         <div className="text-gray-500 text-sm">Overall</div>
