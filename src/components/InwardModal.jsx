@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const BRANDS = ["Aizir", "SHTC", "SHTW"];
 const SHADES = ["A1", "A2", "A3", "A3.5", "B1", "B2", "B3", "C1", "C2", "C3","D2","D3","D4"];
@@ -20,14 +21,17 @@ export default function InwardModal({ onClose, onSubmit }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    if (!form.quantity || form.quantity <= 0) {
-      alert("Enter a valid quantity");
-      return;
-    }
-    onSubmit(form);
-    onClose();
-  };
+ const handleSubmit = () => {
+  if (!form.quantity || Number(form.quantity) <= 0) {
+    toast.error("Please enter a valid quantity");
+    return;
+  }
+
+  onSubmit(form);
+
+  toast.success("Saved successfully");
+  onClose();
+};
 
   useEffect(() => {
   const handleKeyDown = (e) => {
@@ -118,6 +122,7 @@ export default function InwardModal({ onClose, onSubmit }) {
         {/* Quantity */}
         <input
           type="number"
+          min={1}
           name="quantity"
           placeholder="Quantity"
           value={form.quantity}

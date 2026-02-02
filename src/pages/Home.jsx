@@ -8,6 +8,7 @@ import TransactionLog from "../components/TransactionLog";
 import InwardModal from "../components/InwardModal";
 import OutwardModal from "../components/OutwardModal";
 import { Download, FunnelPlus, LockKeyhole, OctagonAlert, Printer, Search, Undo2 } from 'lucide-react';
+import toast from "react-hot-toast";
 
 export default function Home() {
   const {
@@ -62,7 +63,7 @@ export default function Home() {
 
   const exportSnapshot = (key) => {
   const data = localStorage.getItem(key);
-  if (!data) return alert("Snapshot not found");
+  if (!data) return toast.error("Snapshot not found");
 
   const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);

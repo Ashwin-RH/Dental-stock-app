@@ -61,7 +61,7 @@ export default function StockTable({ stock }) {
                   if (qty <= min) return "bg-amber-200 text-amber-900";
                   return "bg-emerald-200 text-emerald-800";
                 })()
-              } px-2 py-1 text-center border border-gray-400 font-bold`}
+              } px-2 py-1 text-center font-saira border border-gray-400 font-bold`}
             >
               {brand.stock?.[size] || 0}
             </td>
@@ -77,7 +77,7 @@ export default function StockTable({ stock }) {
               return (
                 <td
                   key={shade}
-                  className={`${cls} px-2 py-1 text-center border border-gray-500/40 font-bold`}
+                  className={`${cls} px-2 py-1 font-saira text-center border border-gray-500/40 font-bold`}
                 >
                   {qty}
                 </td>

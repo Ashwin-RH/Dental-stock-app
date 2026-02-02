@@ -22,12 +22,12 @@ body {
   font-family: "Saira", sans-serif;
 }
 
-.alert-box {
+/* .alert-box {
   background: #fff3cd;
   border: 1px solid #ffeeba;
   padding: 10px;
   margin-bottom: 20px;
-}
+} */
 
 /* Hide scrollbar but allow scroll */
 .no-scrollbar::-webkit-scrollbar {

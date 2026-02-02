@@ -71,6 +71,7 @@ const getSnapshots = () => {
     }
   };
 
+
 useEffect(() => {
   const saved = localStorage.getItem(STORAGE_KEY);
 
