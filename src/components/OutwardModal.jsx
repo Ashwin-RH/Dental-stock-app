@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 const BRANDS = ["Aizir", "SHTC", "SHTW"];
-const SHADES = ["A1", "A2", "A3", "A3.5", "B1", "B2", "B3", "C1", "C2", "C3","D2","D3","D4"];
+const SHADES = ["-", "A1", "A2", "A3", "A3.5", "B1", "B2", "B3", "C1", "C2", "C3","D2","D3","D4"];
 const SIZES = ["10mm", "12mm", "14mm", "16mm", "18mm", "20mm","22mm","25mm"];
 
 export default function OutwardModal({ onClose, onSubmit, stock }) {
@@ -17,29 +17,55 @@ export default function OutwardModal({ onClose, onSubmit, stock }) {
     quantity: ""
   });
 
+  const isSizeOnly =
+  stock.find(b => b.brand === form.brand)?.type === "SIZE_ONLY";
+
+
+  const getAvailableQty = () => {
+  const brandObj = stock.find(b => b.brand === form.brand);
+  if (!brandObj) return 0;
+
+  if (brandObj.type === "SIZE_ONLY") {
+    return brandObj.stock?.[form.size] ?? 0;
+  }
+
+  return brandObj.stock?.[form.size]?.[form.shade] ?? 0;
+};
+
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    const availableQty =
-      stock
-        .find(b => b.brand === form.brand)
-        ?.stock?.[form.size]?.[form.shade] ?? 0;
+const handleSubmit = () => {
+  const availableQty = getAvailableQty();
 
-    if (!form.quantity || form.quantity <= 0) {
-      toast.error("Enter a valid quantity");
-      return;
-    }
+  if (!form.quantity || form.quantity <= 0) {
+    toast.error("Enter a valid quantity");
+    return;
+  }
 
-    if (Number(form.quantity) > availableQty) {
-      toast.error(`Not enough stock. Available: ${availableQty}`);
-      return;
-    }
+  if (Number(form.quantity) > availableQty) {
+    toast.error(`Not enough stock. Available: ${availableQty}`);
+    return;
+  }
 
-    onSubmit(form);
-    onClose();
-  };
+  onSubmit(form);
+  onClose();
+};
+
+
+useEffect(() => {
+  const brandObj = stock.find(b => b.brand === form.brand);
+
+  if (brandObj?.type === "SIZE_ONLY") {
+    setForm(f => ({ ...f, shade: "-" }));
+  } else if (form.shade === "-") {
+    setForm(f => ({ ...f, shade: "A1" }));
+  }
+}, [form.brand, stock]);
+
+
 
   // ESC listener
   useEffect(() => {
@@ -87,9 +113,15 @@ export default function OutwardModal({ onClose, onSubmit, stock }) {
             name="shade"
             value={form.shade}
             onChange={handleChange}
-            className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 focus:outline-none cursor-pointer"
+            disabled={isSizeOnly}
+            className={`w-full border border-blue-600 text-gray-200 rounded px-3 py-1 focus:outline-none cursor-pointer
+              ${isSizeOnly ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            {SHADES.map(s => <option key={s} className="text-gray-800 bg-gray-200">{s}</option>)}
+            {SHADES.map(s => (
+              <option key={s} className="text-gray-800 bg-gray-200">
+                {s}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -123,7 +155,7 @@ export default function OutwardModal({ onClose, onSubmit, stock }) {
           className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-1 focus:outline-none"
         />
         <p className="text-sm border border-gray-700/70 shadow-xl shadow-blue-600/10 rounded-lg mx-15 text-center text-orange-300 mb-2">
-          Available: {stock.find(b => b.brand === form.brand)?.stock?.[form.size]?.[form.shade] ?? 0}
+          Available: {getAvailableQty()}
         </p>
 
         {/* Actions */}

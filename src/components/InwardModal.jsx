@@ -4,7 +4,11 @@ import toast from "react-hot-toast";
 
 const BRANDS = ["Aizir", "SHTC", "SHTW"];
 const SHADES = ["A1", "A2", "A3", "A3.5", "B1", "B2", "B3", "C1", "C2", "C3","D2","D3","D4"];
-const SIZES = ["10mm", "12mm", "14mm", "16mm", "18mm", "20mm","22mm","25mm"];
+const SIZE_BY_BRAND = {
+  Aizir: ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"],
+  SHTC: ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"],
+  SHTW: ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"]
+};
 
 export default function InwardModal({ onClose, onSubmit }) {
   const [form, setForm] = useState({
@@ -17,9 +21,14 @@ export default function InwardModal({ onClose, onSubmit }) {
     quantity: ""
   });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+ const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  if (name === "shade" && form.brand === "SHTW") return;
+
+  setForm({ ...form, [name]: value });
+};
+
 
  const handleSubmit = () => {
   if (!form.quantity || Number(form.quantity) <= 0) {
@@ -27,10 +36,28 @@ export default function InwardModal({ onClose, onSubmit }) {
     return;
   }
 
-  onSubmit(form);
+  onSubmit({
+  ...form,
+  shade: form.brand === "SHTW" ? null : form.shade
+});
+
 
   toast.success("Saved successfully");
 };
+
+useEffect(() => {
+  const allowedSizes = SIZE_BY_BRAND[form.brand];
+
+  if (!allowedSizes.includes(form.size)) {
+    setForm(f => ({ ...f, size: allowedSizes[0] }));
+  }
+
+  if (form.brand === "SHTW") {
+    setForm(f => ({ ...f, shade: null }));
+  } else if (!form.shade) {
+    setForm(f => ({ ...f, shade: "A1" }));
+  }
+}, [form.brand]);
 
   useEffect(() => {
   const handleKeyDown = (e) => {
@@ -74,31 +101,29 @@ export default function InwardModal({ onClose, onSubmit }) {
         </div>
 
         {/* Shade */}
-        <div className="mb-3">
-          <label className="block text-sm text-gray-300 font-medium mb-1">Shade</label>
-          <select
-            name="shade"
-            value={form.shade}
-            onChange={handleChange}
-            className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 focus:outline-none cursor-pointer"
-          >
-            {SHADES.map((s) => (
-              <option className="text-gray-800 bg-gray-200" key={s}>{s}</option>
-            ))}
-          </select>
-        </div>
+        {form.brand !== "SHTW" && (
+  <div className="mb-3">
+    <label className="block text-sm text-gray-300 font-medium mb-1">Shade</label>
+    <select name="shade" value={form.shade} onChange={handleChange} className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 focus:outline-none cursor-pointer">
+      {SHADES.map(s => <option className="text-gray-800 bg-gray-200" key={s}>{s}</option>)}
+    </select>
+  </div>
+)}
+
 
         <label className="block text-sm text-gray-300 font-medium mb-1">Size</label>
         <select
-          name="size"
-          value={form.size}
-          onChange={handleChange}
-          className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-3 focus:outline-none cursor-pointer"
-        >
-          {SIZES.map(s => (
-            <option key={s}>{s}</option>
+  name="size"
+  value={form.size}
+  onChange={handleChange}
+  className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-3 focus:outline-none cursor-pointer"
+>
+
+          {SIZE_BY_BRAND[form.brand].map(s => (
+            <option className="text-gray-800 bg-gray-200" key={s}>{s}</option>
           ))}
         </select>
+
 
         {/* Supplier */}
         {/* <input

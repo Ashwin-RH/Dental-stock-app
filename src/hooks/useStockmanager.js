@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 const SHADES = ["A1","A2","A3","A3.5","B1","B2","B3","C1","C2","C3"];
-const SIZES = ["8mm","10mm","12mm","14mm","16mm","18mm","20mm"];
+const SIZES = ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"];
 const SHTW_SIZES = ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"];
 
 
@@ -74,6 +74,26 @@ const getSnapshots = () => {
     }
   };
 
+  const normalizeStock = (stock) =>
+  stock.map(b => {
+    // SIZE_ONLY brands (SHTW)
+    if (b.type === "SIZE_ONLY") {
+      const fixed = { ...b.stock };
+      SHTW_SIZES.forEach(sz => {
+        if (fixed[sz] == null) fixed[sz] = 0;
+      });
+      return { ...b, stock: fixed, minStock: fixed };
+    }
+
+    // Normal brands
+    const fixed = { ...b.stock };
+    SIZES.forEach(sz => {
+      if (!fixed[sz]) fixed[sz] = emptySize();
+    });
+
+    return { ...b, stock: fixed, minStock: fixed };
+  });
+
 
 useEffect(() => {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -98,7 +118,7 @@ useEffect(() => {
       );
 
       // 🔥 HYDRATE STATE WITH CLEAN DATA
-      setStock(cleanedStock);
+      setStock(normalizeStock(cleanedStock));
       setLogs(parsed.logs || []);
       setLastUpdated(parsed.lastUpdated || null);
 
@@ -346,14 +366,16 @@ const deleteTransaction = (index) => {
    /* ---------- UNDO ---------- */
 
   const undoLastTransaction = () => {
-    if (logs.length === 0) return;
-    const last = logs[0];
+  if (logs.length === 0) return;
+  const last = logs[0];
 
-    setStock(prev =>
-      prev.map(b => {
-        if (b.brand !== last.brand) return b;
+  setStock(prev =>
+    prev.map(b => {
+      if (b.brand !== last.brand) return b;
 
-        const current = b.stock[last.size][last.shade];
+      // 🔹 SIZE_ONLY (SHTW)
+      if (b.type === "SIZE_ONLY") {
+        const current = b.stock[last.size] || 0;
         const reverted =
           last.type === "IN"
             ? Math.max(0, current - last.qty)
@@ -361,20 +383,34 @@ const deleteTransaction = (index) => {
 
         return {
           ...b,
-          stock: {
-            ...b.stock,
-            [last.size]: {
-              ...b.stock[last.size],
-              [last.shade]: reverted
-            }
-          }
+          stock: { ...b.stock, [last.size]: reverted }
         };
-      })
-    );
+      }
 
-    setLogs(prev => prev.slice(1));
-    updateTime();
-  };
+      // 🔹 Normal brands
+      const current = b.stock[last.size][last.shade] || 0;
+      const reverted =
+        last.type === "IN"
+          ? Math.max(0, current - last.qty)
+          : current + last.qty;
+
+      return {
+        ...b,
+        stock: {
+          ...b.stock,
+          [last.size]: {
+            ...b.stock[last.size],
+            [last.shade]: reverted
+          }
+        }
+      };
+    })
+  );
+
+  setLogs(prev => prev.slice(1));
+  updateTime();
+};
+
 
   return {
     stock,
