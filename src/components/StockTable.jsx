@@ -72,7 +72,7 @@ export default function StockTable({ stock }) {
 
               let cls = "bg-emerald-200 text-emerald-800";
               if (qty === 0) cls = "bg-red-200 text-red-900";
-              else if (qty <= min) cls = "bg-amber-200 text-amber-900";
+              else if (qty < min) cls = "bg-amber-200 text-amber-900";
 
               return (
                 <td
