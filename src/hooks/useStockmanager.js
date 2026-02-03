@@ -364,8 +364,7 @@ const deleteTransaction = (index) => {
 
 
    /* ---------- UNDO ---------- */
-
-  const undoLastTransaction = () => {
+const undoLastTransaction = () => {
   if (logs.length === 0) return;
   const last = logs[0];
 
@@ -373,9 +372,9 @@ const deleteTransaction = (index) => {
     prev.map(b => {
       if (b.brand !== last.brand) return b;
 
-      // 🔹 SIZE_ONLY (SHTW)
+      // SIZE_ONLY
       if (b.type === "SIZE_ONLY") {
-        const current = b.stock[last.size] || 0;
+        const current = b.stock?.[last.size] || 0;
         const reverted =
           last.type === "IN"
             ? Math.max(0, current - last.qty)
@@ -383,12 +382,17 @@ const deleteTransaction = (index) => {
 
         return {
           ...b,
-          stock: { ...b.stock, [last.size]: reverted }
+          stock: {
+            ...b.stock,
+            [last.size]: reverted
+          }
         };
       }
 
-      // 🔹 Normal brands
-      const current = b.stock[last.size][last.shade] || 0;
+      // NORMAL brands (safe access)
+      const current =
+        b.stock?.[last.size]?.[last.shade] || 0;
+
       const reverted =
         last.type === "IN"
           ? Math.max(0, current - last.qty)
@@ -399,7 +403,7 @@ const deleteTransaction = (index) => {
         stock: {
           ...b.stock,
           [last.size]: {
-            ...b.stock[last.size],
+            ...b.stock?.[last.size],
             [last.shade]: reverted
           }
         }
@@ -410,6 +414,7 @@ const deleteTransaction = (index) => {
   setLogs(prev => prev.slice(1));
   updateTime();
 };
+
 
 
   return {

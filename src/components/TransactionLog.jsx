@@ -85,7 +85,7 @@ export default function TransactionLog({ logs, deleteTransaction }) {
 
     {/* Delete button */}
     <button
-      onClick={() => deleteTransaction(logs.length - 1 - i)}
+      onClick={() => deleteTransaction(i)}
       className="p-1 rounded hover:bg-red-600/40 text-red-500 hover:text-red-200 transition-colors cursor-pointer"
       title="Delete transaction"
     >
