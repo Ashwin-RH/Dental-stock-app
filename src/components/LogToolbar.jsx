@@ -19,7 +19,7 @@ export default function LogToolbar({
 
 function SnapshotChip({ snapshotKey, onExport }) {
   const label =
-    snapshotKey.split("sam-stock-snapshot-")[1] || snapshotKey;
+    snapshotKey.split("san-stock-snapshot-")[1] || snapshotKey;
 
   return (
     <button
