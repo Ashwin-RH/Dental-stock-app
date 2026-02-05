@@ -61,7 +61,7 @@ export function useStockManager() {
 
 const getSnapshots = () => {
   return Object.keys(localStorage)
-    .filter(k => k.startsWith(`sam-stock-snapshot-${accountId}-`))
+    .filter(k => k.startsWith(`san-stock-snapshot-${accountId}-`))
     .sort()
     .reverse();
 };
@@ -138,7 +138,7 @@ useEffect(() => {
   if (!lastUpdated || !accountId) return; // wait until real data exists
 
   const monthKey = getMonthKey();
-  const snapshotKey = `sam-stock-snapshot-${accountId}-${monthKey}`;
+  const snapshotKey = `san-stock-snapshot-${accountId}-${monthKey}`;
 
   if (!localStorage.getItem(snapshotKey)) {
     const snapshot = {
