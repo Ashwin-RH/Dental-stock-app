@@ -63,7 +63,7 @@ export default function StockTable({ stock }) {
                 })()
               } px-2 py-1 text-center font-saira border border-gray-400 font-bold`}
             >
-              {brand.stock?.[size] || 0}
+              {brand.stock?.[size] || "-"}
             </td>
           ) : (
             SHADES.map(shade => {
@@ -79,7 +79,7 @@ export default function StockTable({ stock }) {
                   key={shade}
                   className={`${cls} px-2 py-1 font-saira text-center border border-gray-500/40 font-bold`}
                 >
-                  {qty}
+                  {qty === 0 ? "-" : qty}
                 </td>
               );
             })

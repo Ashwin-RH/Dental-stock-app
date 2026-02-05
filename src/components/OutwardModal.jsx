@@ -38,32 +38,51 @@ export default function OutwardModal({ onClose, onSubmit, stock }) {
   };
 
 const handleSubmit = () => {
-  const availableQty = getAvailableQty();
+  // const availableQty = getAvailableQty();
 
-  if (!form.quantity || form.quantity <= 0) {
-    toast.error("Enter a valid quantity");
-    return;
-  }
+  // if (!form.quantity || form.quantity <= 0) {
+  //   toast.error("Enter a valid quantity");
+  //   return;
+  // }
 
-  if (Number(form.quantity) > availableQty) {
-    toast.error(`Not enough stock. Available: ${availableQty}`);
-    return;
-  }
+  // if (Number(form.quantity) > availableQty) {
+  //   toast.error(`Not enough stock. Available: ${availableQty}`);
+  //   return;
+  // }
 
-  onSubmit(form);
-  onClose();
+  // onSubmit(form);
+  // onClose();
+
+  const qty = Number(form.quantity);
+
+if (!qty || qty <= 0) {
+  toast.error("Enter a valid quantity");
+  return;
+}
+
+if (qty > availableQty) {
+  toast.error(`Not enough stock. Available: ${availableQty}`);
+  return;
+}
+
+onSubmit({ ...form, quantity: qty });
+onClose();
+
 };
 
 
 useEffect(() => {
-  const brandObj = stock.find(b => b.brand === form.brand);
+  setForm(f => {
+    const brandObj = stock.find(b => b.brand === f.brand);
+    const isSizeOnly = brandObj?.type === "SIZE_ONLY";
 
-  if (brandObj?.type === "SIZE_ONLY") {
-    setForm(f => ({ ...f, shade: "-" }));
-  } else if (form.shade === "-") {
-    setForm(f => ({ ...f, shade: "A1" }));
-  }
+    return {
+      ...f,
+      shade: isSizeOnly ? "-" : f.shade === "-" ? "A1" : f.shade
+    };
+  });
 }, [form.brand, stock]);
+
 
 
 
@@ -170,7 +189,11 @@ useEffect(() => {
 
           <button
             type="submit"
-            className="px-4 py-1 rounded bg-red-600 text-white hover:bg-red-700 cursor-pointer border border-red-700"
+            disabled={getAvailableQty() === 0}
+            className={`px-4 py-1 rounded border
+              ${getAvailableQty() === 0
+                ? "bg-gray-600 text-gray-300 cursor-not-allowed"
+                : "bg-red-600 text-white hover:bg-red-700 border-red-700"}`}
           >
             Dispatch
           </button>

@@ -55,7 +55,7 @@ export default function TransactionLog({ logs, deleteTransaction }) {
                 </td>
 
                 <td className="py-2 px-3 border border-gray-700/20 text-gray-200">{l.brand}</td>
-                <td className="py-2 px-3 border border-gray-700/20 text-gray-200">{l.shade}</td>
+                <td className="py-2 px-3 border border-gray-700/20 text-gray-200">{l.shade || "-"}</td>
                 <td className="py-2 px-3 border border-gray-700/20 text-gray-200">{l.size}</td>
 
                 {/* Quantity */}
@@ -81,7 +81,7 @@ export default function TransactionLog({ logs, deleteTransaction }) {
 <td className="py-2 px-3 border border-gray-700/20 text-xs text-gray-400">
   <div className="flex items-center justify-between gap-2">
     {/* Time */}
-    <span className="whitespace-nowrap">{l.time}</span>
+    <span className="whitespace-nowrap tabular-nums">{l.time}</span>
 
     {/* Delete button */}
     <button
@@ -104,7 +104,7 @@ export default function TransactionLog({ logs, deleteTransaction }) {
             {logs.length === 0 && (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="8"
                   className="py-6 text-center border border-gray-700/20 text-gray-500 italic"
                 >
                   No transactions recorded yet

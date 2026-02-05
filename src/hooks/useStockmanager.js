@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { loadAccountData, saveAccountData } from "../services/cloudStorage";
+
 
 const SHADES = ["A1","A2","A3","A3.5","B1","B2","B3","C1","C2","C3"];
 const SIZES = ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"];
 const SHTW_SIZES = ["10mm","12mm","14mm","16mm","18mm","20mm","22mm","25mm"];
-
-
-const STORAGE_KEY = "sam-stock-recorder-v1";
-
 
 
 const emptySize = () =>
@@ -41,10 +39,18 @@ const initialStock = [
 ];
 
 export function useStockManager() {
+  const accountId = localStorage.getItem("activeAccount");
+
   const [hydrated, setHydrated] = useState(false);
   const [stock, setStock] = useState(initialStock);
   const [logs, setLogs] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    if (!accountId) {
+      console.warn("useStockManager: no active account");
+    }
+  }, [accountId]);
 
   
   
@@ -55,24 +61,21 @@ export function useStockManager() {
 
 const getSnapshots = () => {
   return Object.keys(localStorage)
-    .filter(k => k.startsWith("sam-stock-snapshot-"))
+    .filter(k => k.startsWith(`sam-stock-snapshot-${accountId}-`))
     .sort()
     .reverse();
 };
 
+
  // ✅ Refresh stock state function
   const refreshStock = (data) => {
-    if (data) {
-      setStock(data.stock || initialStock);
-      setLogs(data.logs || []);
-      setLastUpdated(data.lastUpdated || null);
-    } else {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      setStock(saved?.stock || initialStock);
-      setLogs(saved?.logs || []);
-      setLastUpdated(saved?.lastUpdated || null);
-    }
-  };
+  if (!data) return;
+
+  setStock(data.stock || initialStock);
+  setLogs(data.logs || []);
+  setLastUpdated(data.lastUpdated || null);
+};
+
 
   const normalizeStock = (stock) =>
   stock.map(b => {
@@ -82,7 +85,12 @@ const getSnapshots = () => {
       SHTW_SIZES.forEach(sz => {
         if (fixed[sz] == null) fixed[sz] = 0;
       });
-      return { ...b, stock: fixed, minStock: fixed };
+      return {
+  ...b,
+  stock: fixed,
+  minStock: JSON.parse(JSON.stringify(fixed))
+};
+
     }
 
     // Normal brands
@@ -91,53 +99,46 @@ const getSnapshots = () => {
       if (!fixed[sz]) fixed[sz] = emptySize();
     });
 
-    return { ...b, stock: fixed, minStock: fixed };
+    return {
+  ...b,
+  stock: fixed,
+  minStock: JSON.parse(JSON.stringify(fixed))
+};
   });
 
-
 useEffect(() => {
-  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!accountId) return;
 
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
+  const init = async () => {
+    const cloudData = await loadAccountData(accountId);
 
-      // 🔥 REMOVE Superfect HERE (ONCE)
-      const cleanedStock = (parsed.stock || initialStock)
-        .filter(b => b.brand !== "Superfect");
-
-      const cleanedData = {
-        ...parsed,
-        stock: cleanedStock
-      };
-
-      // 🔥 WRITE CLEAN DATA BACK
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(cleanedData, null, 2)
-      );
-
-      // 🔥 HYDRATE STATE WITH CLEAN DATA
-      setStock(normalizeStock(cleanedStock));
-      setLogs(parsed.logs || []);
-      setLastUpdated(parsed.lastUpdated || null);
-
-    } catch (e) {
-      console.error("Failed to load saved stock data", e);
-      setStock(initialStock);
+    if (cloudData) {
+  setStock(normalizeStock(cloudData.stock || initialStock));
+  setLogs(cloudData.logs || []);
+  setLastUpdated(cloudData.lastUpdated || null);
+} else {
+      // First time login → push empty data
+      await saveAccountData(accountId, {
+        stock: initialStock,
+        logs: [],
+        lastUpdated: null
+      });
     }
-  }
 
-  setHydrated(true);
-}, []);
+    setHydrated(true);
+  };
+
+  init();
+}, [accountId]);
+
 
 
 
 useEffect(() => {
-  if (!lastUpdated) return; // wait until real data exists
+  if (!lastUpdated || !accountId) return; // wait until real data exists
 
   const monthKey = getMonthKey();
-  const snapshotKey = `sam-stock-snapshot-${monthKey}`;
+  const snapshotKey = `sam-stock-snapshot-${accountId}-${monthKey}`;
 
   if (!localStorage.getItem(snapshotKey)) {
     const snapshot = {
@@ -154,19 +155,16 @@ useEffect(() => {
 }, [lastUpdated]); // ✅ runs only once per month
 
 
-
-
 useEffect(() => {
-  if (!hydrated) return; // ⛔ prevent overwrite on first render
+  if (!hydrated || !accountId) return;
 
-  const data = {
+  saveAccountData(accountId, {
     stock,
     logs,
-    lastUpdated,
-  };
+    lastUpdated
+  });
+}, [stock, logs, lastUpdated, hydrated, accountId]);
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data, null, 2));
-}, [stock, logs, lastUpdated, hydrated]);
 
 
 

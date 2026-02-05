@@ -11,6 +11,11 @@ import { Download, FunnelPlus, LockKeyhole, OctagonAlert, Printer, Search, Undo2
 import toast from "react-hot-toast";
 
 export default function Home() {
+  const activeAccount = localStorage.getItem("activeAccount");
+
+  if (!activeAccount) {
+    return null; // or a loading / locked screen
+  }
   const {
     stock,
     logs,
@@ -109,10 +114,29 @@ export default function Home() {
   return (
     
   <div className="p-6 bg-gradient-to-bl from-[#0f172a] via-[#1e1a78] to-[#0f172a] mx-auto">
+
+    {/* Top bar with optional logout */}
+<div className="flex justify-end mb-4">
+  {activeAccount === "dev" && (
+    <button
+      onClick={() => {
+        localStorage.removeItem("activeAccount");
+        localStorage.removeItem("selectedAccount");
+        window.location.reload(); // return to login screen
+      }}
+      className="px-3 py-1 cursor-pointer bg-red-600/80 text-white rounded-lg hover:bg-red-600/100 transition"
+    >
+      Logout
+    </button>
+  )}
+</div>
+
     {/* Header */}
     <h2 className="font-bitcount text-3xl text-center uppercase tracking-widest font-semibold mb-6 text-gray-300">
-      SAM Meridian
+      SAN Meridian
     </h2>
+
+    
 
    <StockSummary stock={stock} totalByBrand={totalByBrand} totalStock={totalStock} />
 
@@ -166,7 +190,7 @@ export default function Home() {
 <div id="print-area">
   <div className="print:block hidden mb-4">
     <h1 className="text-xl font-bold text-center">
-      SAM Meridian – Stock & Transaction Report
+      SAN Meridian – Stock & Transaction Report
     </h1>
     <p className="text-sm text-center">
       Generated on: {new Date().toLocaleString()}

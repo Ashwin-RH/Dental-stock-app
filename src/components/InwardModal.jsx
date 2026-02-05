@@ -46,18 +46,17 @@ export default function InwardModal({ onClose, onSubmit }) {
 };
 
 useEffect(() => {
-  const allowedSizes = SIZE_BY_BRAND[form.brand];
+  setForm(f => {
+    const allowedSizes = SIZE_BY_BRAND[f.brand];
 
-  if (!allowedSizes.includes(form.size)) {
-    setForm(f => ({ ...f, size: allowedSizes[0] }));
-  }
-
-  if (form.brand === "SHTW") {
-    setForm(f => ({ ...f, shade: null }));
-  } else if (!form.shade) {
-    setForm(f => ({ ...f, shade: "A1" }));
-  }
+    return {
+      ...f,
+      size: allowedSizes.includes(f.size) ? f.size : allowedSizes[0],
+      shade: f.brand === "SHTW" ? null : f.shade || "A1"
+    };
+  });
 }, [form.brand]);
+
 
   useEffect(() => {
   const handleKeyDown = (e) => {
@@ -123,25 +122,6 @@ useEffect(() => {
             <option className="text-gray-800 bg-gray-200" key={s}>{s}</option>
           ))}
         </select>
-
-
-        {/* Supplier */}
-        {/* <input
-          name="supplier"
-          placeholder="Supplier Name"
-          value={form.supplier}
-          onChange={handleChange}
-          className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-3 focus:outline-none"
-        /> */}
-
-        {/* Batch */}
-        {/* <input
-          name="batch"
-          placeholder="Batch Number"
-          value={form.batch}
-          onChange={handleChange}
-          className="w-full border border-blue-600 text-gray-200 rounded px-3 py-1 mb-3 focus:outline-none"
-        /> */}
 
         {/* Quantity */}
         <input

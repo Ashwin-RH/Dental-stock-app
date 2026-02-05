@@ -1,4 +1,4 @@
-import { Download, Printer, Calendar, Package } from "lucide-react";
+import { Download, Printer, Package } from "lucide-react";
 
 export default function LogToolbar({
   fromDate,
@@ -17,18 +17,23 @@ export default function LogToolbar({
   const visible = snapshots.slice(0, 4); // show first 4
   const hidden = snapshots.slice(4);     // rest go into dropdown
 
-  function SnapshotChip({ snapshotKey, onExport }) {
-    return (
-      <button
-        onClick={() => onExport(snapshotKey)}
-        className="px-3 py-1 text-xs sm:text-sm font-medium rounded-full
-          bg-blue-500/10 border border-blue-500/30
-          text-blue-300 hover:bg-blue-500/20 transition whitespace-nowrap"
-      >
-        <Package className="w-4 h-4 text-yellow-400/80 mr-1 inline" /> {snapshotKey.replace("sam-stock-snapshot-", "")}
-      </button>
-    );
-  }
+function SnapshotChip({ snapshotKey, onExport }) {
+  const label =
+    snapshotKey.split("sam-stock-snapshot-")[1] || snapshotKey;
+
+  return (
+    <button
+      onClick={() => onExport(snapshotKey)}
+      className="px-3 py-1 text-xs sm:text-sm font-medium rounded-full
+        bg-blue-500/10 border border-blue-500/30
+        text-blue-300 hover:bg-blue-500/20 transition whitespace-nowrap"
+    >
+      <Package className="w-4 h-4 text-yellow-400/80 mr-1 inline" />
+      {label}
+    </button>
+  );
+}
+
 
   return (
     <div className="mb-6 space-y-4">
@@ -93,7 +98,7 @@ export default function LogToolbar({
         {/* Print */}
         <button
           type="button"
-          onClick={() => window.print()}
+          onClick={printLogs}
           className="flex items-center gap-2 px-4 py-2 rounded-xl border
                      bg-gray-800/50 border-green-600/40 hover:shadow-xl hover:shadow-green-900/40
                      cursor-pointer w-full sm:w-auto justify-center"
@@ -109,12 +114,18 @@ export default function LogToolbar({
           ))}
 
           {hidden.length > 0 && (
-            <details className="relative" onClick={(e) => e.currentTarget.removeAttribute("open")}>
+            <details className="relative" onToggle={(e) => {
+  if (e.target.open) {
+    setTimeout(() => e.target.removeAttribute("open"), 0);
+  }
+}}>
+
               <summary className="cursor-pointer text-xs text-red-400">
                 +{hidden.length} more
               </summary>
 
-              <div className="absolute right-0 bottom-full mb-2 w-48
+              <div className="absolute right-0 bottom-full sm:bottom-full top-full sm:top-auto
+ mb-2 w-48
                              bg-gray-900 border border-gray-700
                              rounded-xl p-2 space-y-1 z-20"
               >
