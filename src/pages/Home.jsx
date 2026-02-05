@@ -117,7 +117,7 @@ export default function Home() {
 
     {/* Top bar with optional logout */}
 <div className="flex justify-end mb-4">
-  {activeAccount === "dev" && (
+  
     <button
       onClick={() => {
         localStorage.removeItem("activeAccount");
@@ -128,11 +128,11 @@ export default function Home() {
     >
       Logout
     </button>
-  )}
+  
 </div>
 
     {/* Header */}
-    <h2 className="font-bitcount text-3xl text-center uppercase tracking-widest font-semibold mb-6 text-gray-300">
+    <h2 className="font-bitcount text-3xl text-center uppercase tracking-widest font-semibold mb-6 text-gray-300 select-none">
       SAN Meridian
     </h2>
 

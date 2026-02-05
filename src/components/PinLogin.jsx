@@ -36,9 +36,14 @@ export default function PinLogin({ onSuccess }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800">
-      <div className="bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl mx-4 p-8 w-80 shadow-lg flex flex-col items-center">
-        <h2 className="text-white text-xl font-semibold mb-6 tracking-wide">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4">
+      {/* Responsive title */}
+      <h1 className="text-white text-3xl sm:text-4xl md:text-5xl font-bold mb-10 text-center select-none">
+        SAN Meridian
+      </h1>
+
+      <div className="bg-white/10 backdrop-blur-md border border-gray-700 rounded-2xl p-8 w-full max-w-sm shadow-lg flex flex-col items-center">
+        <h2 className="text-white text-xl sm:text-2xl font-semibold mb-6 tracking-wide text-center select-none">
           Enter Your PIN
         </h2>
 
@@ -49,18 +54,16 @@ export default function PinLogin({ onSuccess }) {
             value={pin}
             maxLength={4}
             onChange={e => setPin(e.target.value.replace(/\D/g, ""))}
-            className="w-full text-center text-xl tracking-widest px-3 py-2 rounded-xl bg-gray-800/50 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 duration-500 transition"
+            className="w-full text-center text-xl sm:text-2xl tracking-widest px-3 py-2 rounded-xl bg-gray-800/50 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-500"
           />
 
           <button
             type="submit"
-            className="w-full mt-5 py-2 font-zalando tracking-widest cursor-pointer rounded-xl bg-blue-800/30 hover:bg-gray-200 active:bg-blue-700 transition text-white hover:text-gray-800 font-medium text-lg shadow-md"
+            className="w-full mt-5 py-3 rounded-xl bg-blue-800/40 hover:bg-gray-200 active:bg-blue-700 transition text-white hover:text-gray-800 font-medium text-lg shadow-md tracking-widest cursor-pointer"
           >
             Unlock
           </button>
         </form>
-
-        
       </div>
     </div>
   );

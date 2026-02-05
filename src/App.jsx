@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import PinLogin from "./components/PinLogin";
 import PinLock from "./components/PinLock";
 
-const AUTO_LOCK_TIME = 60 * 1000; // 10 seconds for testing
+const AUTO_LOCK_TIME = 600 * 1000; // 10 seconds for testing
 
 export default function App() {
   const [activeAccount, setActiveAccount] = useState(
