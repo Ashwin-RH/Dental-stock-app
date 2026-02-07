@@ -6,7 +6,7 @@ const SIZES = ["10mm", "12mm", "14mm", "16mm", "18mm", "20mm","22mm","25mm"];
 
 export default function StockTable({ stock }) {
   return (
-    <div className="overflow-x-auto no-scrollbar max-h-[75vh] rounded-xl border border-gray-800 shadow-lg bg-white">
+    <div className="overflow-x-auto no-scrollbar max-h-[110vh] rounded-xl border border-gray-800 shadow-lg bg-white">
       <table className="w-full border-collapse text-xs sm:text-sm">
         {/* Header */}
         <thead className="sticky top-0 z-20 bg-gray-200">

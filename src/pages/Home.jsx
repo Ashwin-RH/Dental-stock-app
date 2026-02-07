@@ -119,15 +119,21 @@ export default function Home() {
 <div className="flex justify-end mb-4">
   
     <button
-      onClick={() => {
-        localStorage.removeItem("activeAccount");
-        localStorage.removeItem("selectedAccount");
-        window.location.reload(); // return to login screen
-      }}
-      className="px-3 py-1 cursor-pointer bg-red-600/80 text-white rounded-lg hover:bg-red-600/100 transition"
-    >
-      Logout
-    </button>
+  onClick={() => {
+    localStorage.removeItem("activeAccount");
+    localStorage.removeItem("selectedAccount");
+
+    toast.success("Logged out successfully");
+
+    setTimeout(() => {
+      window.location.reload(); // return to login screen
+    }, 1200); // 1.2s delay (tweak if needed)
+  }}
+  className="px-3 py-1 cursor-pointer bg-red-600/80 text-white rounded-lg hover:bg-red-600/100 transition"
+>
+  Logout
+</button>
+
   
 </div>
 
