@@ -22,12 +22,6 @@ body {
   font-family: "Saira", sans-serif;
 }
 
-/* .alert-box {
-  background: #fff3cd;
-  border: 1px solid #ffeeba;
-  padding: 10px;
-  margin-bottom: 20px;
-} */
 
 /* Hide scrollbar but allow scroll */
 .no-scrollbar::-webkit-scrollbar {
@@ -44,6 +38,16 @@ body {
   /* Hide everything by default */
   body * {
     visibility: hidden;
+  }
+
+  /* Remove height restriction so full table prints */
+  .max-h-\[75vh\] {
+    max-height: none !important;
+  }
+
+  /* Remove scrolling in print */
+  .overflow-x-auto {
+    overflow: visible !important;
   }
 
   /* Show only StockTable and TransactionLog */

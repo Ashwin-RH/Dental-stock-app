@@ -38,21 +38,8 @@ export default function OutwardModal({ onClose, onSubmit, stock }) {
   };
 
 const handleSubmit = () => {
-  // const availableQty = getAvailableQty();
-
-  // if (!form.quantity || form.quantity <= 0) {
-  //   toast.error("Enter a valid quantity");
-  //   return;
-  // }
-
-  // if (Number(form.quantity) > availableQty) {
-  //   toast.error(`Not enough stock. Available: ${availableQty}`);
-  //   return;
-  // }
-
-  // onSubmit(form);
-  // onClose();
-
+  
+  const availableQty = getAvailableQty();
   const qty = Number(form.quantity);
 
 if (!qty || qty <= 0) {
