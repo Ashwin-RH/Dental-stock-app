@@ -52,7 +52,7 @@ export default function TransactionLog({ logs, deleteTransaction }) {
         Transaction History
       </h3>
 
-      <div className="overflow-x-auto border border-gray-700 rounded-xl shadow-lg backdrop-blur bg-gray-900/40 mb-8">
+      <div className="overflow-x-auto border no-scrollbar border-gray-700 rounded-xl shadow-lg backdrop-blur bg-gray-900/40 mb-8">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-gray-800 text-gray-300 z-10">
             <tr>
