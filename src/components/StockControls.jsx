@@ -63,21 +63,19 @@ export default function StockControls({
   logs
 }) {
 
-  
-
-
   return (
     <div className="flex flex-wrap gap-2 mb-4 items-center justify-center">
-      <button
-  className="group flex gap-2 border border-gray-600 bg-gray-800/50
-             text-sm text-blue-400 px-4 py-2 rounded-lg
-             hover:bg-green-500 hover:text-white
-             cursor-pointer duration-500 transition-all transform-gpu outline-none"
-  onClick={() => setShowInward(true)}
->
-  Inward
-  <ArrowDown className="w-5 h-5 text-green-400 group-hover:text-gray-100 duration-500" />
-</button>
+       <button
+      className="group flex gap-2 border border-gray-600 bg-gray-800/50
+                 text-sm text-blue-400 px-4 py-2 rounded-lg
+                 hover:bg-green-500 hover:text-white
+                 cursor-pointer duration-500 transition-all transform-gpu outline-none"
+      onClick={() => setShowInward(true)}
+      title="Shortcut: I"
+    >
+      Inward
+      <ArrowDown className="w-5 h-5 text-green-400 group-hover:text-gray-100 duration-500" />
+    </button>
 
 <button
   className="group flex gap-2 border border-gray-600 bg-gray-800/50
@@ -111,7 +109,7 @@ export default function StockControls({
 </select>
 
 
-<select
+{/* <select
   value={shadeFilter}
   onChange={e => setShadeFilter(e.target.value)}
   className="cursor-pointer border border-gray-600 bg-gray-800/50 text-blue-400 rounded-lg px-3 py-1.5 focus:outline-none"
@@ -130,12 +128,11 @@ export default function StockControls({
   <option className="bg-white text-black">D2</option>
   <option className="bg-white text-black">D3</option>
   <option className="bg-white text-black">D4</option>
-</select>
+</select> */}
 
 
-    <div className="relative w-fit">
+    {/* <div className="relative w-fit">
   <input
-    type="text"
     placeholder="Search Brand..."
     onChange={e => setSearch(e.target.value)}
     className="border border-blue-500/40 placeholder:text-gray-400 bg-transparent
@@ -147,7 +144,7 @@ export default function StockControls({
     className="absolute right-2 top-1/2 -translate-y-1/2
                text-blue-400 w-4 h-4 pointer-events-none"
   />
-</div>
+</div> */}
 
 
     </div>

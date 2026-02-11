@@ -59,7 +59,7 @@ export default function PinLogin({ onSuccess }) {
 
           <button
             type="submit"
-            className="w-full mt-5 py-3 rounded-xl bg-blue-800/40 hover:bg-gray-200 active:bg-blue-700 transition text-white hover:text-gray-800 font-medium text-lg shadow-md tracking-widest cursor-pointer"
+            className="w-full mt-5 py-3 rounded-xl bg-blue-800/40 hover:bg-gray-200 transition text-white hover:text-gray-800 font-medium text-lg shadow-md tracking-widest cursor-pointer"
           >
             Unlock
           </button>

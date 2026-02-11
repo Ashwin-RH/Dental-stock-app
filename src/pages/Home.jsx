@@ -167,7 +167,7 @@ export default function Home() {
 />
 
 {/* Active Filters */}
-<div className="flex flex-wrap gap-2 mb-3">
+{/* <div className="flex flex-wrap gap-2 mb-3">
   {(brandFilter !== "ALL" || shadeFilter !== "ALL") && (
   <span
     onClick={() => {
@@ -190,7 +190,7 @@ export default function Home() {
       Shade: {shadeFilter} ✕
     </span>
   )}
-</div>
+</div> */}
 
 {/* Stock Table */}
 <div id="print-area">
