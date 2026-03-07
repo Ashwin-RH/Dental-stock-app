@@ -53,7 +53,7 @@ if (qty > availableQty) {
 }
 
 onSubmit({ ...form, quantity: qty });
-onClose();
+
 
 toast.success("Stock dispatched successfully");
 };
